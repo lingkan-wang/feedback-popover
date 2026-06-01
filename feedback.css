@@ -72,17 +72,16 @@
 
 /* success：庆祝动态 emoji（小而灵动；动画限定在 success 态显示时才触发） */
 .fb__success { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; padding: 18px; text-align: center; }
-.fb__party { position: relative; width: 60px; height: 52px; display: flex; align-items: center; justify-content: center; margin-bottom: 2px; }
+.fb__party { position: relative; width: 54px; height: 46px; display: flex; align-items: center; justify-content: center; margin-bottom: 2px; }
 .fb__party-emoji {
   font-family: "Apple Color Emoji","Segoe UI Emoji",sans-serif;
-  font-size: 40px; line-height: 1; display: inline-block; transform-origin: 70% 80%;
+  font-size: 34px; line-height: 1; display: inline-block; transform-origin: 70% 80%;
 }
-/* 只在成功态显示时播放：弹入（带回弹）后持续轻轻摇摆 */
+/* 只在成功态显示时轻轻左右摇摆（旋转，不做放大缩小） */
 .fb[data-state="success"] .fb__party-emoji {
-  animation: fb-party-in .5s cubic-bezier(.34,1.7,.5,1) both, fb-party-wiggle 1.5s .55s ease-in-out infinite;
+  animation: fb-party-wiggle 1.6s ease-in-out infinite;
 }
-@keyframes fb-party-in { 0%{opacity:0; transform:scale(.3) rotate(-18deg)} 60%{opacity:1; transform:scale(1.18) rotate(7deg)} 100%{opacity:1; transform:scale(1) rotate(0)} }
-@keyframes fb-party-wiggle { 0%,100%{transform:rotate(-6deg)} 50%{transform:rotate(6deg)} }
+@keyframes fb-party-wiggle { 0%,100%{transform:rotate(-5deg)} 50%{transform:rotate(5deg)} }
 
 /* 撒花：body 级粒子（JS WAAPI 驱动），固定定位、最上层，不被卡片 overflow 裁切，可飞出 UI */
 .fb-confetti-piece { position: fixed; width: 8px; height: 8px; border-radius: 2px; pointer-events: none; z-index: 100000; will-change: transform, opacity; }
