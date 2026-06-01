@@ -1,0 +1,81 @@
+/* feedback.css — Emil 式变形 feedback 弹层（居中版，简化为 rate + thoughts，Apple 式完成态） */
+:root { --fb-ease: cubic-bezier(.4, .6, .2, 1); }
+
+/* 居中：translate 居中保持不变，宽高过渡时从中心对称生长 */
+.fb {
+  position: fixed; top: 50%; left: 50%; z-index: 99999;
+  box-sizing: border-box; overflow: hidden;
+  background: #fff; color: #18181b;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.16), 0 2px 8px rgba(0, 0, 0, 0.06);
+  transform: translate(-50%, -50%); transform-origin: center;
+  transition:
+    width .42s var(--fb-ease), height .42s var(--fb-ease),
+    border-radius .42s var(--fb-ease), box-shadow .42s var(--fb-ease),
+    background .42s var(--fb-ease);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+.fb[data-state="trigger"] { width: 128px; height: 44px; border-radius: 22px; cursor: pointer; }
+.fb[data-state="form"]    { width: 384px; height: 320px; border-radius: 18px; }
+.fb[data-state="success"] { width: 300px; height: 188px; border-radius: 18px; background: #fafafa; }
+@media (max-width: 440px) { .fb[data-state="form"] { width: calc(100vw - 32px); } }
+
+/* 三层内容交叉淡入 + 变形糊一下掩盖叠影 */
+.fb__layer { position: absolute; inset: 0; opacity: 0; pointer-events: none; transition: opacity .22s ease; }
+.fb[data-state="trigger"] .fb__layer[data-for="trigger"],
+.fb[data-state="form"]    .fb__layer[data-for="form"],
+.fb[data-state="success"] .fb__layer[data-for="success"] { opacity: 1; pointer-events: auto; }
+.fb[data-animating] .fb__layer { filter: blur(3px); }
+
+/* trigger */
+.fb__trigger { width: 100%; height: 100%; border: 0; background: transparent; color: inherit;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; }
+.fb__trigger:active { transform: scale(.97); }
+
+/* form：只有 rate + thoughts + send */
+.fb__form { display: flex; flex-direction: column; height: 100%; padding: 18px; gap: 12px; }
+.fb__rate-label { font-size: 12px; color: #52525b; display: block; margin-bottom: 7px; }
+.fb__rates { display: flex; gap: 8px; }
+.fb__rate { flex: 1; font: inherit; font-size: 13px; padding: 9px 6px; border: 1px solid rgba(0,0,0,.14); border-radius: 10px; background: #fff; cursor: pointer; transition: border-color .15s, background .15s, transform .12s ease-out; }
+.fb__rate:active { transform: scale(.97); }
+.fb__rate[data-selected="true"] { border-color: #18181b; background: #fafafa; font-weight: 500; animation: fb-bump .35s cubic-bezier(.34,1.56,.64,1); }
+@keyframes fb-bump { 0%,100%{transform:scale(1)} 45%{transform:scale(1.06)} }
+
+.fb__thoughts { flex: 1; display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: #52525b; }
+.fb__thoughts textarea { flex: 1; width: 100%; box-sizing: border-box; font: inherit; font-size: 14px; color: #18181b; padding: 10px 11px; border: 1px solid rgba(0,0,0,.14); border-radius: 10px; outline: none; resize: none; }
+.fb__thoughts textarea:focus { border-color: #18181b; }
+
+.fb__divider { border-top: 1px dashed rgba(0,0,0,.14); margin: 0 -18px; }
+.fb__foot { display: flex; justify-content: flex-end; }
+.fb__send { font: inherit; font-size: 14px; padding: 9px 16px; border-radius: 10px; border: 0; background: #18181b; color: #fff; cursor: pointer; transition: transform .12s ease-out, background .15s; }
+.fb__send:active { transform: scale(.97); }
+.fb__send:hover { background: #000; }
+
+/* 校验错误 */
+.fb [data-invalid="true"] textarea { border-color: #ef4444 !important; }
+.fb [data-shake="true"] { animation: fb-shake .35s ease; }
+@keyframes fb-shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+
+/* success：Apple 式对勾（圆环弹入 + 对勾描边画出），自动消失 */
+.fb__success { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 20px; text-align: center; }
+.fb__check { width: 56px; height: 56px; margin-bottom: 4px; }
+.fb__check svg { width: 100%; height: 100%; display: block; }
+.fb__ring { fill: #22c55e; transform-origin: center; animation: fb-ring-in .42s cubic-bezier(.34,1.56,.64,1) both; }
+@keyframes fb-ring-in { from { transform: scale(.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.fb__mark { fill: none; stroke: #fff; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: fb-mark-draw .32s .24s cubic-bezier(.65,0,.35,1) forwards; }
+@keyframes fb-mark-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+.fb__success h2 { font-size: 16px; font-weight: 600; margin: 0; }
+.fb__success p { font-size: 13px; color: #71717a; margin: 0; }
+
+/* 背景遮罩 */
+.fb-scrim { position: fixed; inset: 0; background: rgba(0,0,0,.14); opacity: 0; pointer-events: none; transition: opacity .3s ease; z-index: 99998; }
+.fb-scrim[data-show="true"] { opacity: 1; pointer-events: auto; }
+
+/* 尊重 reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .fb, .fb__layer, .fb-scrim { transition-duration: 0.01ms !important; }
+  .fb[data-animating] .fb__layer { filter: none; }
+  .fb__rate[data-selected="true"], .fb__ring, .fb__mark, .fb [data-shake="true"] { animation: none !important; }
+  .fb__mark { stroke-dashoffset: 0; } .fb__ring { opacity: 1; transform: none; }
+}

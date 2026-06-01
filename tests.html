@@ -1,0 +1,25 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>fb tests</title>
+<style>body{font-family:ui-monospace,monospace;padding:24px}</style></head>
+<body><pre id="out"></pre>
+<script src="feedback.js"></script>
+<script>
+  var out = document.getElementById('out'), pass = 0, fail = 0;
+  function assert(n, c){ if(c){pass++;out.textContent+='PASS  '+n+'\n';} else {fail++;out.textContent+='FAIL  '+n+'\n';} }
+  var T = window.__fbTest;
+  assert('exposes test hooks', !!T && typeof T.validate === 'function');
+  if (T && T.validate) {
+    assert('thoughts present passes', T.validate({thoughts:'Nice work', rating:'love'}).valid === true);
+    assert('rating is optional', T.validate({thoughts:'Nice', rating:null}).valid === true);
+    assert('empty thoughts flagged', T.validate({thoughts:'', rating:'bad'}).errors.indexOf('thoughts') > -1);
+    assert('whitespace thoughts flagged', T.validate({thoughts:'   '}).valid === false);
+  }
+  assert('exposes vibratePattern', T && typeof T.vibratePattern === 'function');
+  if (T && T.vibratePattern) {
+    assert('success pattern', JSON.stringify(T.vibratePattern('success')) === '[15,40,30]');
+    assert('selection pattern', JSON.stringify(T.vibratePattern('selection')) === '[10]');
+    assert('unknown -> default', JSON.stringify(T.vibratePattern('???')) === '[15]');
+  }
+  out.textContent += '\n' + pass + ' passed, ' + fail + ' failed\n';
+  window.__testResult = { pass: pass, fail: fail };
+</script>
+</body></html>
