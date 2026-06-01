@@ -71,16 +71,18 @@
     if (reducedMotion()) return;
     var W = window.innerWidth, H = window.innerHeight;
     var colors = ['#f59e0b', '#ec4899', '#22c55e', '#3b82f6', '#a855f7', '#f43f5e', '#10b981', '#eab308', '#06b6d4'];
-    var N = 80;
-    for (var i = 0; i < N; i++) dropPiece(W, H, i, colors);
+    var N = 90;
+    for (var i = 0; i < N; i++) dropPiece(W, H, i, N, colors);
   }
-  function dropPiece(W, H, i, colors) {
+  function dropPiece(W, H, i, N, colors) {
     var p = document.createElement('div');
     p.className = 'fb-confetti-piece';
     var size = 6 + Math.random() * 7;
     p.style.width = size + 'px';
     p.style.height = (size * (0.45 + Math.random() * 0.7)) + 'px';
-    p.style.left = (Math.random() * W) + 'px';
+    // 按列均匀分布 + 抖动，铺满整屏宽、不扎堆
+    var x = ((i + 0.5) / N) * W + (Math.random() - 0.5) * (W / N) * 1.7;
+    p.style.left = Math.max(0, Math.min(W - size, x)) + 'px';
     p.style.top = '-24px';
     p.style.background = colors[i % colors.length];
     if (i % 4 === 0) p.style.borderRadius = '50%';
@@ -88,13 +90,13 @@
     var fall = H + 60;
     var sway = (18 + Math.random() * 44) * (Math.random() < 0.5 ? -1 : 1); // 左右飘摆
     var rot = (Math.random() * 900 - 450) | 0;
-    var dur = 2400 + Math.random() * 2000;
-    var delay = Math.random() * 1000;                                       // 错峰飘落
+    var dur = 1300 + Math.random() * 1100;                                  // 更快
+    var delay = Math.random() * 1100;                                       // 错峰飘落
     var anim = p.animate([
       { transform: 'translate(0px, 0px) rotate(0deg)', opacity: 1 },
       { transform: 'translate(' + sway + 'px, ' + (fall * 0.5) + 'px) rotate(' + (rot * 0.5) + 'deg)', opacity: 1, offset: 0.5 },
-      { transform: 'translate(' + (-sway) + 'px, ' + fall + 'px) rotate(' + rot + 'deg)', opacity: 1 }
-    ], { duration: dur, delay: delay, easing: 'cubic-bezier(.35,.1,.5,1)', fill: 'forwards' });
+      { transform: 'translate(' + (-sway) + 'px, ' + fall + 'px) rotate(' + rot + 'deg)', opacity: 0 } // 后半程渐隐
+    ], { duration: dur, delay: delay, easing: 'cubic-bezier(.3,.2,.5,1)', fill: 'forwards' });
     anim.onfinish = function () { if (p.parentNode) p.parentNode.removeChild(p); };
   }
 
