@@ -40,18 +40,12 @@
   var SUCCESS_HTML =
     '<div class="fb__layer" data-for="success">' +
       '<div class="fb__success">' +
-        '<div class="fb__mv">' +
-          '<svg class="fb__mv-svg" viewBox="0 0 100 100" aria-hidden="true">' +
-            '<polygon class="fb__face fb__face--top"   points="50,18 78,34 50,50 22,34"/>' +
-            '<polygon class="fb__face fb__face--left"  points="22,34 50,50 50,82 22,66"/>' +
-            '<polygon class="fb__face fb__face--right" points="78,34 50,50 50,82 78,66"/>' +
-          '</svg>' +
-          '<span class="fb__mote fb__mote--1"></span>' +
-          '<span class="fb__mote fb__mote--2"></span>' +
-          '<span class="fb__mote fb__mote--3"></span>' +
+        '<div class="fb__party">' +
+          '<span class="fb__confetti"><span></span><span></span><span></span><span></span><span></span><span></span></span>' +
+          '<span class="fb__party-emoji">🎉</span>' +
         '</div>' +
-        '<h2>Complete</h2>' +
-        '<p>Thanks for the feedback.</p>' +
+        '<h2>Feedback received!</h2>' +
+        '<p>Thanks for helping us improve.</p>' +
       '</div>' +
     '</div>';
 
@@ -120,7 +114,7 @@
     if (autoTimer) clearTimeout(autoTimer);
     autoTimer = setTimeout(function () {
       if (fb.dataset.state === 'success') { setState('trigger'); resetForm(); }
-    }, 2600);
+    }, 2000);
   }
 
   // ---- 挂载 ----
