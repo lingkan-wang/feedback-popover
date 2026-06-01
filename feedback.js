@@ -66,38 +66,35 @@
     try { navigator.vibrate(vibratePattern(type)); } catch (e) {}
   }
 
-  // ---- 撒花：body 级粒子（不被卡片 overflow 裁切），从 🥳 吸管处朝右上方喷出 + 下坠 ----
+  // ---- 撒花：满屏从顶部飘落的彩纸雨（body 级粒子，不被卡片裁切） ----
   function blowConfetti() {
     if (reducedMotion()) return;
-    var emoji = fb && fb.querySelector('.fb__party-emoji');
-    if (!emoji) return;
-    var r = emoji.getBoundingClientRect();
-    var ox = r.left + r.width * 0.74;  // 吸管在表情右上
-    var oy = r.top + r.height * 0.32;
-    var colors = ['#f59e0b', '#ec4899', '#22c55e', '#3b82f6', '#a855f7', '#f43f5e', '#10b981', '#eab308'];
-    var N = 24;
-    for (var i = 0; i < N; i++) spawnPiece(ox, oy, i, colors);
+    var W = window.innerWidth, H = window.innerHeight;
+    var colors = ['#f59e0b', '#ec4899', '#22c55e', '#3b82f6', '#a855f7', '#f43f5e', '#10b981', '#eab308', '#06b6d4'];
+    var N = 80;
+    for (var i = 0; i < N; i++) dropPiece(W, H, i, colors);
   }
-  function spawnPiece(ox, oy, i, colors) {
+  function dropPiece(W, H, i, colors) {
     var p = document.createElement('div');
     p.className = 'fb-confetti-piece';
-    p.style.left = ox + 'px';
-    p.style.top = oy + 'px';
+    var size = 6 + Math.random() * 7;
+    p.style.width = size + 'px';
+    p.style.height = (size * (0.45 + Math.random() * 0.7)) + 'px';
+    p.style.left = (Math.random() * W) + 'px';
+    p.style.top = '-24px';
     p.style.background = colors[i % colors.length];
-    if (i % 3 === 0) p.style.borderRadius = '50%';
+    if (i % 4 === 0) p.style.borderRadius = '50%';
     document.body.appendChild(p);
-    var ang = -Math.PI / 4 + (Math.random() - 0.5) * 1.35; // 锥形朝右上喷
-    var dist = 130 + Math.random() * 170;
-    var dx = Math.cos(ang) * dist;
-    var dy = Math.sin(ang) * dist;                          // 负 = 向上
-    var gravity = 90 + Math.random() * 90;                  // 之后下坠
-    var rot = (Math.random() * 720 - 360) | 0;
-    var dur = 900 + Math.random() * 700;
+    var fall = H + 60;
+    var sway = (18 + Math.random() * 44) * (Math.random() < 0.5 ? -1 : 1); // 左右飘摆
+    var rot = (Math.random() * 900 - 450) | 0;
+    var dur = 2400 + Math.random() * 2000;
+    var delay = Math.random() * 1000;                                       // 错峰飘落
     var anim = p.animate([
-      { transform: 'translate(-50%,-50%) translate(0px,0px) rotate(0deg)', opacity: 1 },
-      { offset: 0.7, opacity: 1 },
-      { transform: 'translate(-50%,-50%) translate(' + dx + 'px,' + (dy + gravity) + 'px) rotate(' + rot + 'deg)', opacity: 0 }
-    ], { duration: dur, easing: 'cubic-bezier(.15,.6,.4,1)', fill: 'forwards' });
+      { transform: 'translate(0px, 0px) rotate(0deg)', opacity: 1 },
+      { transform: 'translate(' + sway + 'px, ' + (fall * 0.5) + 'px) rotate(' + (rot * 0.5) + 'deg)', opacity: 1, offset: 0.5 },
+      { transform: 'translate(' + (-sway) + 'px, ' + fall + 'px) rotate(' + rot + 'deg)', opacity: 1 }
+    ], { duration: dur, delay: delay, easing: 'cubic-bezier(.35,.1,.5,1)', fill: 'forwards' });
     anim.onfinish = function () { if (p.parentNode) p.parentNode.removeChild(p); };
   }
 
