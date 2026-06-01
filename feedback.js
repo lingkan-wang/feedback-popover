@@ -23,9 +23,9 @@
         '<div class="fb__rate-group" data-field="rating">' +
           '<span class="fb__rate-label">Rate your experience</span>' +
           '<div class="fb__rates">' +
-            '<button type="button" class="fb__rate" data-value="bad">🤢 Bad</button>' +
-            '<button type="button" class="fb__rate" data-value="decent">🙂 Decent</button>' +
-            '<button type="button" class="fb__rate" data-value="love">😍 Love it!</button>' +
+            '<button type="button" class="fb__rate" data-value="bad"><span class="fb__rate-emoji">🤢</span> Bad</button>' +
+            '<button type="button" class="fb__rate" data-value="decent"><span class="fb__rate-emoji">🙂</span> Decent</button>' +
+            '<button type="button" class="fb__rate" data-value="love"><span class="fb__rate-emoji">😍</span> Love it!</button>' +
           '</div>' +
         '</div>' +
         '<label class="fb__thoughts" data-field="thoughts">' +
@@ -42,7 +42,7 @@
       '<div class="fb__success">' +
         '<div class="fb__party">' +
           '<span class="fb__confetti"><span></span><span></span><span></span><span></span><span></span><span></span></span>' +
-          '<span class="fb__party-emoji">🎉</span>' +
+          '<span class="fb__party-emoji">🥳</span>' +
         '</div>' +
         '<h2>Feedback received!</h2>' +
         '<p>Thanks for helping us improve.</p>' +

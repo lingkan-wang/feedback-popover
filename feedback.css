@@ -39,8 +39,20 @@
 .fb__rates { display: flex; gap: 8px; }
 .fb__rate { flex: 1; font: inherit; font-size: 13px; padding: 9px 6px; border: 1px solid rgba(0,0,0,.14); border-radius: 10px; background: #fff; cursor: pointer; transition: border-color .15s, background .15s, transform .12s ease-out; }
 .fb__rate:active { transform: scale(.97); }
-.fb__rate[data-selected="true"] { border-color: #18181b; background: #fafafa; font-weight: 500; animation: fb-bump .35s cubic-bezier(.34,1.56,.64,1); }
-@keyframes fb-bump { 0%,100%{transform:scale(1)} 45%{transform:scale(1.06)} }
+.fb__rate[data-selected="true"] { border-color: #18181b; background: #fafafa; font-weight: 500; }
+.fb__rate[data-selected="true"] .fb__rate-emoji { animation: fb-bump .35s cubic-bezier(.34,1.56,.64,1); }
+@keyframes fb-bump { 0%,100%{transform:scale(1)} 45%{transform:scale(1.2)} }
+
+/* hover：每个评分 emoji 各自微微动起来（只在真鼠标 hover 时） */
+.fb__rate-emoji { display: inline-block; }
+@media (hover: hover) and (pointer: fine) {
+  .fb__rate:hover .fb__rate-emoji                  { animation: fb-float 1s ease-in-out infinite; }
+  .fb__rate[data-value="bad"]:hover .fb__rate-emoji  { animation: fb-queasy .9s ease-in-out infinite; }
+  .fb__rate[data-value="love"]:hover .fb__rate-emoji { animation: fb-beat .7s ease-in-out infinite; }
+}
+@keyframes fb-float  { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
+@keyframes fb-queasy { 0%,100%{transform:translateY(0) rotate(-7deg)} 50%{transform:translateY(-2px) rotate(7deg)} }
+@keyframes fb-beat   { 0%,100%{transform:scale(1)} 30%{transform:scale(1.2)} 60%{transform:scale(.96)} }
 
 .fb__thoughts { flex: 1; display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: #52525b; }
 .fb__thoughts textarea { flex: 1; width: 100%; box-sizing: border-box; font: inherit; font-size: 14px; color: #18181b; padding: 10px 11px; border: 1px solid rgba(0,0,0,.14); border-radius: 10px; outline: none; resize: none; }
@@ -98,7 +110,7 @@
 @media (prefers-reduced-motion: reduce) {
   .fb, .fb__layer, .fb-scrim { transition-duration: 0.01ms !important; }
   .fb[data-animating] .fb__layer { filter: none; }
-  .fb__rate[data-selected="true"], .fb [data-shake="true"],
+  .fb__rate-emoji, .fb [data-shake="true"],
   .fb[data-state="success"] .fb__party-emoji, .fb[data-state="success"] .fb__confetti span { animation: none !important; }
   .fb__confetti { display: none; }
 }
