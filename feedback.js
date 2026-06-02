@@ -175,6 +175,18 @@
         currentRating = b.dataset.value;
         haptic('selection');
       });
+      // 触摸设备没有 hover：长按 ~420ms 预览表情切换（🤢→🤮 等），松手/滑走还原
+      var pressTimer = null, startY = 0;
+      function endPress() { if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; } b.removeAttribute('data-pressing'); }
+      b.addEventListener('pointerdown', function (e) {
+        if (e.pointerType !== 'touch') return;
+        startY = e.clientY;
+        pressTimer = setTimeout(function () { b.dataset.pressing = 'true'; haptic('selection'); }, 420);
+      });
+      b.addEventListener('pointerup', endPress);
+      b.addEventListener('pointercancel', endPress);
+      b.addEventListener('pointerleave', endPress);
+      b.addEventListener('pointermove', function (e) { if (pressTimer && Math.abs(e.clientY - startY) > 10) endPress(); });
     });
     var form = fb.querySelector('.fb__form');
     if (form) form.addEventListener('submit', onSubmit);
