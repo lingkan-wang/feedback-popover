@@ -21,7 +21,11 @@
   border-color: transparent;
   box-shadow: 0 14px 28px -24px rgba(24, 24, 27, 0.18);
 }
-.fb[data-state="success"] { width: 300px; height: 184px; border-radius: 18px; background: #fff; }
+.fb[data-state="success"] {
+  width: 300px; height: 184px; border-radius: 18px; background: #fff;
+  border-color: transparent;
+  box-shadow: 0 12px 24px -20px rgba(24, 24, 27, 0.16);
+}
 @media (max-width: 440px) { .fb[data-state="form"] { width: calc(100vw - 32px); } }
 
 /* 三层内容交叉淡入 + 变形糊一下掩盖叠影 */
