@@ -21,6 +21,79 @@
   <script>
     if (window.self !== window.top) document.body.classList.add("is-embedded");
   </script>
+  <script>
+    (() => {
+      const channel = "little-rubbish-drag";
+      const slug = "feedback-popover";
+      let press = null;
+      let suppressClick = false;
+
+      const send = (phase, event) => {
+        parent.postMessage({
+          channel,
+          slug,
+          phase,
+          pointerId: event.pointerId,
+          clientX: event.clientX,
+          clientY: event.clientY,
+          pointerType: event.pointerType,
+          button: event.button
+        }, "*");
+      };
+
+      document.addEventListener("pointerdown", (event) => {
+        if (window.self === window.top) return;
+        if (event.pointerType === "mouse" && event.button !== 0) return;
+
+        const target = event.target instanceof Element ? event.target : null;
+        if (
+          !target?.closest(".fb") ||
+          target.closest("input, textarea, select, [contenteditable='true']")
+        ) {
+          return;
+        }
+
+        press = {
+          pointerId: event.pointerId,
+          startX: event.clientX,
+          startY: event.clientY,
+          moved: false
+        };
+        try { target.setPointerCapture?.(event.pointerId); } catch {}
+        send("down", event);
+      }, true);
+
+      document.addEventListener("pointermove", (event) => {
+        if (!press || press.pointerId !== event.pointerId) return;
+        if (Math.hypot(event.clientX - press.startX, event.clientY - press.startY) > 6) {
+          press.moved = true;
+        }
+        send("move", event);
+        if (!press.moved) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      }, { capture: true, passive: false });
+
+      const finish = (event) => {
+        if (!press || press.pointerId !== event.pointerId) return;
+        suppressClick = press.moved;
+        send("up", event);
+        press = null;
+        if (suppressClick) {
+          setTimeout(() => { suppressClick = false; }, 0);
+        }
+      };
+
+      document.addEventListener("pointerup", finish, true);
+      document.addEventListener("pointercancel", finish, true);
+      document.addEventListener("click", (event) => {
+        if (!suppressClick) return;
+        suppressClick = false;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      }, true);
+    })();
+  </script>
   <script src="feedback.js"></script>
 </body>
 </html>
