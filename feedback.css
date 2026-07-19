@@ -19,9 +19,7 @@
 .fb[data-state="form"] {
   width: 384px; height: 320px; border-radius: 18px;
   border-color: transparent;
-  box-shadow:
-    0 2px 8px rgba(24, 24, 27, 0.035),
-    0 12px 32px rgba(24, 24, 27, 0.06);
+  box-shadow: 0 14px 28px -24px rgba(24, 24, 27, 0.18);
 }
 .fb[data-state="success"] { width: 300px; height: 184px; border-radius: 18px; background: #fff; }
 @media (max-width: 440px) { .fb[data-state="form"] { width: calc(100vw - 32px); } }
