@@ -18,11 +18,10 @@
 .fb[data-state="trigger"] { width: 128px; height: 44px; border-radius: 22px; cursor: pointer; }
 .fb[data-state="form"] {
   width: 384px; height: 320px; border-radius: 18px;
-  border-color: rgba(0, 0, 0, 0.035);
+  border-color: transparent;
   box-shadow:
-    0 2px 4px rgba(24, 24, 27, 0.04),
-    0 12px 28px -10px rgba(24, 24, 27, 0.14),
-    0 30px 64px -24px rgba(24, 24, 27, 0.18);
+    0 2px 8px rgba(24, 24, 27, 0.035),
+    0 12px 32px rgba(24, 24, 27, 0.06);
 }
 .fb[data-state="success"] { width: 300px; height: 184px; border-radius: 18px; background: #fff; }
 @media (max-width: 440px) { .fb[data-state="form"] { width: calc(100vw - 32px); } }
